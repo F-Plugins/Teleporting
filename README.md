@@ -1,7 +1,7 @@
 # Teleporting
 ![Discord](https://img.shields.io/discord/742861338233274418?label=Discord&logo=Discord) ![Github All Releases](https://img.shields.io/github/downloads/F-Plugins/Teleporting/total?label=Downloads) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/F-Plugins/Teleporting?label=Version)
 
-Makes teleportation possible on your 
+Makes teleportation possible on your server
 
 ### Download Now
 [ClickMe](https://github.com/F-Plugins/Teleporting/releases)
