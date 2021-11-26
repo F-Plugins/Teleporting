@@ -7,6 +7,7 @@ namespace Feli.RocketMod.Teleporting
     {
         public string MessageColor { get; set; }
         public float TeleportDelay { get; set; }
+        public double TeleportCooldown { get; set; }
         public bool CancelWhenMove { get; set; }
         public TeleportCost TeleportCost { get; set; }
         
@@ -14,6 +15,7 @@ namespace Feli.RocketMod.Teleporting
         {
             MessageColor = "magenta";
             TeleportDelay = 5;
+            TeleportCooldown = 60;
             CancelWhenMove = false;
             TeleportCost = new TeleportCost()
             {

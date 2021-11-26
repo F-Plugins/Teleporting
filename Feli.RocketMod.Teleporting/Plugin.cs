@@ -44,6 +44,7 @@ namespace Feli.RocketMod.Teleporting
             {"TpaCommand:Send:Yourself", "There is no point on sending a tpa request to yourself"},
             {"TpaCommand:Send:Target", "{0} has just sent you a tpa request. Use \"/tpa accept\" to accept it or \n/tpa cancel\n to cancel it"},
             {"TpaCommand:Send:Sender", "Successfully sent a tpa request to {0}. Use \"/tpa cancel\" to cancel it"},
+            {"TpaCommand:Send:Cooldown", "You cannot send a tpa request. Wait {0} seconds"},
             {"TpaCommand:Accept:NoRequests", "There are no tpa requests to accept"},
             {"TpaCommand:Accept:Delay", "You will be teleported to {0} in {1} seconds"},
             {"TpaCommand:Accept:Success", "Successfully accepted {0}'s tpa"},

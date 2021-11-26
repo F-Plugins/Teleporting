@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using Rocket.Core.Utils;
 using Rocket.Unturned;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
+using SDG.Unturned;
 using UnityEngine;
 
 namespace Feli.RocketMod.Teleporting
@@ -14,11 +16,13 @@ namespace Feli.RocketMod.Teleporting
         private readonly Plugin _plugin;
         private readonly Color _messageColor;
         private readonly Configuration _configuration;
-        private List<Tuple<UnturnedPlayer, UnturnedPlayer>> _teleportRequests;
+        private readonly List<Tuple<UnturnedPlayer, UnturnedPlayer>> _teleportRequests;
+        private readonly Dictionary<UnturnedPlayer, DateTime> _cooldowns;
 
         public TeleportsManager(Plugin plugin)
         {
             _teleportRequests = new List<Tuple<UnturnedPlayer, UnturnedPlayer>>();
+            _cooldowns = new Dictionary<UnturnedPlayer, DateTime>();
             _plugin = plugin;
             _configuration = plugin.Configuration.Instance;
             _messageColor = plugin.MessageColor;
@@ -40,6 +44,19 @@ namespace Feli.RocketMod.Teleporting
                 _teleportRequests.Remove(request);
             }
 
+            var cooldown = GetCooldown(sender);
+
+            var cooldownTime = cooldown.AddSeconds(_configuration.TeleportCooldown);
+
+            if (cooldownTime > DateTime.Now)
+            {
+                var waitTime = (cooldownTime - DateTime.Now).TotalSeconds;
+                UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Send:Cooldown", Math.Round(waitTime)), _messageColor, true);
+                return;
+            }
+            
+            UpdateCooldown(sender);
+            
             request = new Tuple<UnturnedPlayer, UnturnedPlayer>(sender, target);
             
             _teleportRequests.Add(request);
@@ -148,6 +165,27 @@ namespace Feli.RocketMod.Teleporting
                 UnturnedChat.Say(other, _plugin.Translate("TpaValidation:Leave", player.DisplayName), _messageColor, true);
                 _teleportRequests.Remove(request);
             }
+
+            var cooldown = GetCooldown(player);
+
+            if (cooldown != DateTime.MinValue)
+                _cooldowns.Remove(player);
+        }
+
+        private void UpdateCooldown(UnturnedPlayer player)
+        {
+            if(_cooldowns.ContainsKey(player))
+                _cooldowns[player] = DateTime.Now;
+            else
+                _cooldowns.Add(player, DateTime.Now);
+        }
+
+        private DateTime GetCooldown(UnturnedPlayer player)
+        {
+            if (_cooldowns.ContainsKey(player))
+                return _cooldowns[player];
+            
+            return DateTime.MinValue;
         }
         
         public void Dispose()
