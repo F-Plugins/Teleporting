@@ -1,10 +1,9 @@
 ﻿using Feli.RocketMod.Teleporting.Economy;
 using Rocket.API.Collections;
 using Rocket.Core.Plugins;
-using Rocket.Core.Logging;
 using Rocket.Unturned.Chat;
-using Steamworks;
 using UnityEngine;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace Feli.RocketMod.Teleporting
 {
@@ -13,16 +12,20 @@ namespace Feli.RocketMod.Teleporting
         public static Plugin Instance { get; private set; }
         public TeleportsManager TeleportsManager { get; private set; }
         public IEconomyProvider EconomyProvider { get; set; }
-        public Color MessageColor { get; set; }
+        public Color MessageColor { get; private set; }
         
         protected override void Load()
         {
             Instance = this;
-            TeleportsManager = new TeleportsManager();
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
+            TeleportsManager = new TeleportsManager(this);
             EconomyProvider = Configuration.Instance.TeleportCost.UseXp
                 ? new ExperienceEconomyProvider() as IEconomyProvider
                 : new UconomyEconomyProvider();
+
+            Logger.Log($"Teleporting plugin v{Assembly.GetName().Version} loaded !");
+            Logger.Log("Do you want more cool plugins? Join now: https://discord.gg/4FF2548 !");
+            Logger.Log($"Economy Provider: {EconomyProvider.GetType().Name}");
         }
 
         protected override void Unload()
@@ -30,6 +33,7 @@ namespace Feli.RocketMod.Teleporting
             Instance = null;
             TeleportsManager.Dispose();
             TeleportsManager = null;
+            EconomyProvider = null;
         }
 
         public override TranslationList DefaultTranslations => new TranslationList()
@@ -50,7 +54,8 @@ namespace Feli.RocketMod.Teleporting
             {"TpaValidation:Car:Other", "The teleport was cancelled because {0} is on a car"},
             {"TpaValidation:Car:Self", "The teleport was cancelled because you are on a car"},
             {"TpaValidation:Leave", "The teleport was cancelled because {0} left the server"},
-            {"TpaValidation:Balance", "You dont have enough balance to teleport. Teleport cost: {0}"}
+            {"TpaValidation:Balance:Sender", "You dont have enough balance to teleport. Teleport cost: {0}"},
+            {"TpaValidation:Balance:Target", "The teleport was cancelled because {0} does not have enough balance"}
         };
     }
 }

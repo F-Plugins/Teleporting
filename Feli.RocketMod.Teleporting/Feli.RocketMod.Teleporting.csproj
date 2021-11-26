@@ -8,7 +8,7 @@
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>Feli.RocketMod.Teleporting</RootNamespace>
-        <AssemblyName>Teleporting</AssemblyName>
+        <AssemblyName>Feli.RocketMod.Teleporting</AssemblyName>
         <AssemblyVersion>1.0.0</AssemblyVersion>
         <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>

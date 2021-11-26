@@ -37,7 +37,7 @@ namespace Feli.RocketMod.Teleporting.Economy
             var pluginInstance = accessorField.GetValue(null);
 
             var database = plugin.GetField("Database");
-            var databaseInstance = database.GetValue(pluginInstance);
+            var databaseInstance = database.GetValue(pluginInstance);   
 
             var method = database.FieldType.GetMethod(name);
 

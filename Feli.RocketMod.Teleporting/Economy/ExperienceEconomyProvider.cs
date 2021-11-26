@@ -1,5 +1,6 @@
 ﻿using System;
 using SDG.Unturned;
+using Steamworks;
 
 namespace Feli.RocketMod.Teleporting.Economy
 {
@@ -28,7 +29,7 @@ namespace Feli.RocketMod.Teleporting.Economy
 
         private Player GetPlayerFromId(string playerId)
         {
-            return PlayerTool.getPlayer(playerId);
+            return PlayerTool.getPlayer(new CSteamID(ulong.Parse(playerId)));
         }
     }
 }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Remoting;
+﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
-using UnityEngine.Playables;
 
 namespace Feli.RocketMod.Teleporting.Commands
 {
@@ -17,7 +14,7 @@ namespace Feli.RocketMod.Teleporting.Commands
             
             if (command.Length < 1)
             {
-                UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor);
+                UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor, true);
                 return;
             }
             
@@ -31,7 +28,7 @@ namespace Feli.RocketMod.Teleporting.Commands
             {
                 if (command.Length < 2)
                 {
-                    UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage:Send"), messageColor);
+                    UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage:Send"), messageColor, true);
                     return;
                 }
 
@@ -39,7 +36,7 @@ namespace Feli.RocketMod.Teleporting.Commands
 
                 if (target == null)
                 {
-                    UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage:NotFound", command[1]), messageColor);
+                    UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage:NotFound", command[1]), messageColor, true);
                     return;
                 }
                 
@@ -51,7 +48,7 @@ namespace Feli.RocketMod.Teleporting.Commands
                 teleportsManager.Cancel(player);
             else
             {
-                UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor);
+                UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor, true);
             }
         }
 
