@@ -87,6 +87,9 @@ namespace Feli.RocketMod.Teleporting
                 if(!isValid)
                     return;
                 
+                if(_configuration.TeleportCost.Enabled)
+                    _plugin.EconomyProvider.IncrementBalance(sender.Id, -_configuration.TeleportCost.TpaCost);
+                
                 sender.Player.teleportToLocationUnsafe(sender.Position, sender.Player.look.yaw);
                 _teleportRequests.Remove(request);
                 
@@ -105,7 +108,7 @@ namespace Feli.RocketMod.Teleporting
             }
 
             var other = request.Item2.Equals(player) ? request.Item1 : request.Item2;
-
+            
             _teleportRequests.Remove(request);
             
             UnturnedChat.Say(player, _plugin.Translate("TpaCommand:Cancel:Success", other.DisplayName), _messageColor);
@@ -125,6 +128,11 @@ namespace Feli.RocketMod.Teleporting
                 UnturnedChat.Say(sender, _plugin.Translate("TpaValidation:Car:Other", problem.DisplayName),
                     _messageColor);
 
+                return false;
+            }
+            else if (_configuration.TeleportCost.Enabled && _plugin.EconomyProvider.GetBalance(sender.Id) < _configuration.TeleportCost.TpaCost)
+            {
+                UnturnedChat.Say(sender, _plugin.Translate("TpaValidation:Balance", _configuration.TeleportCost.TpaCost), _messageColor);    
                 return false;
             }
             

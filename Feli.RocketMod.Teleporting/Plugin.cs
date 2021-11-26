@@ -1,7 +1,9 @@
-﻿using Rocket.API.Collections;
+﻿using Feli.RocketMod.Teleporting.Economy;
+using Rocket.API.Collections;
 using Rocket.Core.Plugins;
 using Rocket.Core.Logging;
 using Rocket.Unturned.Chat;
+using Steamworks;
 using UnityEngine;
 
 namespace Feli.RocketMod.Teleporting
@@ -10,6 +12,7 @@ namespace Feli.RocketMod.Teleporting
     {
         public static Plugin Instance { get; private set; }
         public TeleportsManager TeleportsManager { get; private set; }
+        public IEconomyProvider EconomyProvider { get; set; }
         public Color MessageColor { get; set; }
         
         protected override void Load()
@@ -17,6 +20,9 @@ namespace Feli.RocketMod.Teleporting
             Instance = this;
             TeleportsManager = new TeleportsManager();
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
+            EconomyProvider = Configuration.Instance.TeleportCost.UseXp
+                ? new ExperienceEconomyProvider() as IEconomyProvider
+                : new UconomyEconomyProvider();
         }
 
         protected override void Unload()
@@ -43,7 +49,8 @@ namespace Feli.RocketMod.Teleporting
             {"TpaCommand:Cancel:Success", "Successfully canceled the tpa with {0}"},
             {"TpaValidation:Car:Other", "The teleport was cancelled because {0} is on a car"},
             {"TpaValidation:Car:Self", "The teleport was cancelled because you are on a car"},
-            {"TpaValidation:Leave", "The teleport was cancelled because {0} left the server"}
+            {"TpaValidation:Leave", "The teleport was cancelled because {0} left the server"},
+            {"TpaValidation:Balance", "You dont have enough balance to teleport. Teleport cost: {0}"}
         };
     }
 }
