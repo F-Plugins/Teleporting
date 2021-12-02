@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using Rocket.API;
 using Rocket.Core.Utils;
 using Rocket.Unturned;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
 using UnityEngine;
@@ -15,6 +14,7 @@ namespace Feli.RocketMod.Teleporting
     {
         private Plugin _plugin;
         private Color _messageColor;
+        private string _messageIcon;
         private Configuration _configuration;
         private List<Tuple<UnturnedPlayer, UnturnedPlayer>> _teleportRequests;
         private Dictionary<UnturnedPlayer, DateTime> _cooldowns;
@@ -29,6 +29,7 @@ namespace Feli.RocketMod.Teleporting
             _cooldowns = new Dictionary<UnturnedPlayer, DateTime>();
             _plugin = plugin;
             _configuration = plugin.Configuration.Instance;
+            _messageIcon = _configuration.MessageIcon;
             _messageColor = plugin.MessageColor;
             U.Events.OnPlayerDisconnected += OnLeave;
             DamageTool.onPlayerAllowedToDamagePlayer += OnPlayerAllowedToDamagePlayer;
@@ -38,7 +39,7 @@ namespace Feli.RocketMod.Teleporting
         {
             if (sender.Equals(target))
             {
-                UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Send:Yourself"), _messageColor, true);
+                Say(sender, _plugin.Translate("TpaCommand:Send:Yourself"), _messageColor, _messageIcon);
                 return;
             }
 
@@ -56,7 +57,7 @@ namespace Feli.RocketMod.Teleporting
             if (cooldownTime > DateTime.Now)
             {
                 var waitTime = (cooldownTime - DateTime.Now).TotalSeconds;
-                UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Send:Cooldown", Math.Round(waitTime)), _messageColor, true);
+                Say(sender, _plugin.Translate("TpaCommand:Send:Cooldown", Math.Round(waitTime)), _messageColor, _messageIcon);
                 return;
             }
             
@@ -69,7 +70,7 @@ namespace Feli.RocketMod.Teleporting
                 if (combatTime > DateTime.Now)
                 {
                     var waitTime = (combatTime - DateTime.Now).TotalSeconds;
-                    UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Send:Combat", Math.Round(waitTime)), true);
+                    Say(sender, _plugin.Translate("TpaCommand:Send:Combat", Math.Round(waitTime)), _messageColor, _messageIcon);
                     return;
                 }
             }
@@ -80,8 +81,8 @@ namespace Feli.RocketMod.Teleporting
             
             _teleportRequests.Add(request);
             
-            UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Send:Sender", target.DisplayName), _messageColor, true);
-            UnturnedChat.Say(target, _plugin.Translate("TpaCommand:Send:Target", sender.DisplayName), _messageColor, true);
+            Say(sender, _plugin.Translate("TpaCommand:Send:Sender", target.DisplayName), _messageColor, _messageIcon);
+            Say(target, _plugin.Translate("TpaCommand:Send:Target", sender.DisplayName), _messageColor, _messageIcon);
         }
         
         public void Accept(UnturnedPlayer target)
@@ -90,16 +91,16 @@ namespace Feli.RocketMod.Teleporting
 
             if (request == null)
             {
-                UnturnedChat.Say(target, _plugin.Translate("TpaCommand:Accept:NoRequests"), _messageColor, true);
+                Say(target , _plugin.Translate("TpaCommand:Accept:NoRequests"), _messageColor, _messageIcon);
                 return;
             }
 
             var sender = request.Item1;
             
-            UnturnedChat.Say(target, _plugin.Translate("TpaCommand:Accept:Success", sender.DisplayName), _messageColor, true);
+            Say(target, _plugin.Translate("TpaCommand:Accept:Success", sender.DisplayName), _messageColor, _messageIcon);
             if (_configuration.TeleportDelay > 0)
             {
-                UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Accept:Delay", target.DisplayName, _configuration.TeleportDelay), _messageColor, true);
+                Say(sender, _plugin.Translate("TpaCommand:Accept:Delay", target.DisplayName, _configuration.TeleportDelay), _messageColor, _messageIcon);
             }
 
             var senderPosition = sender.Position;
@@ -127,7 +128,7 @@ namespace Feli.RocketMod.Teleporting
                 sender.Player.teleportToLocationUnsafe(target.Position, target.Player.look.yaw);
                 _teleportRequests.Remove(request);
                 
-                UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Accept:Teleported", target.DisplayName), _messageColor, true);
+                Say(sender, _plugin.Translate("TpaCommand:Accept:Teleported", target.DisplayName), _messageColor, _messageIcon);
             }, _configuration.TeleportDelay);
         }
 
@@ -137,7 +138,7 @@ namespace Feli.RocketMod.Teleporting
 
             if (request == null)
             {
-                UnturnedChat.Say(player, _plugin.Translate("TpaCommand:Cancel:NotRequests"), _messageColor, true);
+                Say(player, _plugin.Translate("TpaCommand:Cancel:NotRequests"), _messageColor, _messageIcon);
                 return;
             }
 
@@ -145,8 +146,8 @@ namespace Feli.RocketMod.Teleporting
             
             _teleportRequests.Remove(request);
             
-            UnturnedChat.Say(player, _plugin.Translate("TpaCommand:Cancel:Success", other.DisplayName), _messageColor, true);
-            UnturnedChat.Say(other, _plugin.Translate("TpaCommand:Cancel:Other", player.DisplayName), _messageColor, true);
+            Say(player, _plugin.Translate("TpaCommand:Cancel:Success", other.DisplayName), _messageColor, _messageIcon);
+            Say(other, _plugin.Translate("TpaCommand:Cancel:Other", player.DisplayName), _messageColor, _messageIcon);
         }
 
         private bool ValidateRequest(Tuple<UnturnedPlayer, UnturnedPlayer> request)
@@ -158,17 +159,18 @@ namespace Feli.RocketMod.Teleporting
             {
                 var problem = sender.CurrentVehicle != null ? sender : target;
 
-                UnturnedChat.Say(problem, _plugin.Translate("TpaValidation:Car:Self"), _messageColor, true);
-                UnturnedChat.Say(sender, _plugin.Translate("TpaValidation:Car:Other", problem.DisplayName),
-                    _messageColor, true);
+                Say(problem, _plugin.Translate("TpaValidation:Car:Self"), _messageColor, _messageIcon);
+                Say(sender, _plugin.Translate("TpaValidation:Car:Other", problem.DisplayName),
+                    _messageColor, _messageIcon);
 
                 return false;
             }
             
             if (_configuration.TeleportCost.Enabled && _plugin.EconomyProvider.GetBalance(sender.Id) < _configuration.TeleportCost.TpaCost)
             {
-                UnturnedChat.Say(sender, _plugin.Translate("TpaValidation:Balance:Sender", _configuration.TeleportCost.TpaCost), _messageColor, true);    
-                UnturnedChat.Say(target, _plugin.Translate("TpaValidation:Balance:Target", sender.DisplayName), _messageColor, true);
+                Say(sender, _plugin.Translate("TpaValidation:Balance:Sender", _configuration.TeleportCost.TpaCost), _messageColor, _messageIcon);
+                Say(target, _plugin.Translate("TpaValidation:Balance:Target", sender.DisplayName), _messageColor, _messageIcon);
+                
                 return false;
             }
 
@@ -182,8 +184,8 @@ namespace Feli.RocketMod.Teleporting
                 {
                     var waitTime = (combatTime - DateTime.Now).TotalSeconds;
 
-                    UnturnedChat.Say(sender, _plugin.Translate("TpaValidation:Combat:Sender", Math.Round(waitTime)), true);
-                    UnturnedChat.Say(target, _plugin.Translate("TpaValidation:Combat:Target", sender.DisplayName), true);
+                    Say(sender, _plugin.Translate("TpaValidation:Combat:Sender", Math.Round(waitTime)), _messageColor, _messageIcon);
+                    Say(target, _plugin.Translate("TpaValidation:Combat:Target", sender.DisplayName), _messageColor, _messageIcon);
 
                     return false;
                 }
@@ -200,7 +202,7 @@ namespace Feli.RocketMod.Teleporting
             {
                 var other = request.Item1.Equals(player) ? request.Item2 : request.Item1;
                 
-                UnturnedChat.Say(other, _plugin.Translate("TpaValidation:Leave", player.DisplayName), _messageColor, true);
+                Say(other, _plugin.Translate("TpaValidation:Leave", player.DisplayName), _messageColor, _messageIcon);
                 _teleportRequests.Remove(request);
             }
 
@@ -242,7 +244,7 @@ namespace Feli.RocketMod.Teleporting
                     isAllowed = false;
                     var waitTime = (teleportProtectionTime - DateTime.Now).TotalSeconds;
 
-                    UnturnedChat.Say(instigator, _plugin.Translate("TpaProtection", Math.Round(waitTime), victim.DisplayName), true);
+                    Say(instigator, _plugin.Translate("TpaProtection", Math.Round(waitTime), victim.DisplayName), _messageColor, _messageIcon);
                 }
                 else
                 {
@@ -297,6 +299,13 @@ namespace Feli.RocketMod.Teleporting
                 return _cooldowns[player];
             
             return DateTime.MinValue;
+        }
+        
+        private void Say(IRocketPlayer rocketPlayer, string message, Color messageColor, string icon = null)
+        {
+            var player = rocketPlayer as UnturnedPlayer;
+            
+            ChatManager.serverSendMessage(message, messageColor, toPlayer: player.SteamPlayer(), mode: EChatMode.SAY, iconURL: icon, useRichTextFormatting: true);
         }
         
         public void Dispose()

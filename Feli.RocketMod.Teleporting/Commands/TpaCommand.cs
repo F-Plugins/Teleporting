@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
+using SDG.Unturned;
+using UnityEngine;
 
 namespace Feli.RocketMod.Teleporting.Commands
 {
@@ -11,10 +12,11 @@ namespace Feli.RocketMod.Teleporting.Commands
         {
             var plugin = Plugin.Instance;
             var messageColor = plugin.MessageColor;
+            var messageIcon = plugin.Configuration.Instance.MessageIcon;
             
             if (command.Length < 1)
             {
-                UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor, true);
+                Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor, messageIcon);
                 return;
             }
             
@@ -28,7 +30,7 @@ namespace Feli.RocketMod.Teleporting.Commands
             {
                 if (command.Length < 2)
                 {
-                    UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage:Send"), messageColor, true);
+                    Say(caller, plugin.Translate("TpaCommand:WrongUsage:Send"), messageColor, messageIcon);
                     return;
                 }
 
@@ -36,7 +38,7 @@ namespace Feli.RocketMod.Teleporting.Commands
 
                 if (target == null)
                 {
-                    UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage:NotFound", command[1]), messageColor, true);
+                    Say(caller, plugin.Translate("TpaCommand:WrongUsage:NotFound", command[1]), messageColor, messageIcon);
                     return;
                 }
                 
@@ -48,10 +50,17 @@ namespace Feli.RocketMod.Teleporting.Commands
                 teleportsManager.Cancel(player);
             else
             {
-                UnturnedChat.Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor, true);
+                Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor, messageIcon);
             }
         }
 
+        private void Say(IRocketPlayer rocketPlayer, string message, Color messageColor, string icon = null)
+        {
+            var player = rocketPlayer as UnturnedPlayer;
+            
+            ChatManager.serverSendMessage(message, messageColor, toPlayer: player.SteamPlayer(), mode: EChatMode.SAY, iconURL: icon, useRichTextFormatting: true);
+        }
+        
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
         public string Name => "tpa";
         public string Help => "Send, accept, deny and cancel teleport requests";

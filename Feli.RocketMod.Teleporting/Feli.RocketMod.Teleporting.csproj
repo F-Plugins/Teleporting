@@ -9,8 +9,8 @@
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>Feli.RocketMod.Teleporting</RootNamespace>
         <AssemblyName>Feli.RocketMod.Teleporting</AssemblyName>
-        <AssemblyVersion>1.3.0</AssemblyVersion>
-        <Version>1.3.0</Version>
+        <AssemblyVersion>1.4.0</AssemblyVersion>
+        <Version>1.4.0</Version>
         <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>

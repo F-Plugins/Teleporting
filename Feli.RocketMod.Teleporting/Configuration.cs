@@ -1,11 +1,13 @@
 ﻿using Feli.RocketMod.Teleporting.Economy.Configuration;
 using Rocket.API;
+using SDG.Unturned;
 
 namespace Feli.RocketMod.Teleporting
 {
     public class Configuration : IRocketPluginConfiguration
     {
         public string MessageColor { get; set; }
+        public string MessageIcon { get; set; }
         public float TeleportDelay { get; set; }
         public double TeleportCooldown { get; set; }
         public bool CancelWhenMove { get; set; }
@@ -18,6 +20,7 @@ namespace Feli.RocketMod.Teleporting
         public void LoadDefaults()
         {
             MessageColor = "magenta";
+            MessageIcon = Provider.configData.Browser.Icon;
             TeleportDelay = 5;
             TeleportCooldown = 60;
             CancelWhenMove = false;
