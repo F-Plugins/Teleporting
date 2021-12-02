@@ -52,6 +52,7 @@ namespace Feli.RocketMod.Teleporting
             {"TpaCommand:Cancel:NotRequests", "There are no tpa requests to cancel"},
             {"TpaCommand:Cancel:Other", "{0} has just cancelled the tpa request"},
             {"TpaCommand:Cancel:Success", "Successfully canceled the tpa with {0}"},
+            {"TpaProtection", "You must wait {0} seconds to damage {1} he is on tpa protection"},
             {"TpaValidation:Car:Other", "The teleport was cancelled because {0} is on a car"},
             {"TpaValidation:Car:Self", "The teleport was cancelled because you are on a car"},
             {"TpaValidation:Leave", "The teleport was cancelled because {0} left the server"},

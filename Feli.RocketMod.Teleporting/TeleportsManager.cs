@@ -18,15 +18,18 @@ namespace Feli.RocketMod.Teleporting
         private readonly Configuration _configuration;
         private readonly List<Tuple<UnturnedPlayer, UnturnedPlayer>> _teleportRequests;
         private readonly Dictionary<UnturnedPlayer, DateTime> _cooldowns;
-
+        private readonly Dictionary<UnturnedPlayer, DateTime> _teleportProtections;
+            
         public TeleportsManager(Plugin plugin)
         {
             _teleportRequests = new List<Tuple<UnturnedPlayer, UnturnedPlayer>>();
+            _teleportProtections = new Dictionary<UnturnedPlayer, DateTime>();
             _cooldowns = new Dictionary<UnturnedPlayer, DateTime>();
             _plugin = plugin;
             _configuration = plugin.Configuration.Instance;
             _messageColor = plugin.MessageColor;
             U.Events.OnPlayerDisconnected += OnLeave;
+            DamageTool.onPlayerAllowedToDamagePlayer += OnPlayerAllowedToDamagePlayer;
         }
 
         public void Send(UnturnedPlayer sender, UnturnedPlayer target)
@@ -103,7 +106,9 @@ namespace Feli.RocketMod.Teleporting
                 if(_configuration.TeleportCost.Enabled)
                     _plugin.EconomyProvider.IncrementBalance(sender.Id, -_configuration.TeleportCost.TpaCost);
                 
-                sender.Player.teleportToLocationUnsafe(sender.Position, sender.Player.look.yaw);
+                UpdateTeleportProtection(sender);
+                
+                sender.Player.teleportToLocationUnsafe(target.Position, target.Player.look.yaw);
                 _teleportRequests.Remove(request);
                 
                 UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Accept:Teleported", target.DisplayName), _messageColor, true);
@@ -170,6 +175,39 @@ namespace Feli.RocketMod.Teleporting
 
             if (cooldown != DateTime.MinValue)
                 _cooldowns.Remove(player);
+
+            var proctection = GetTeleportProtection(player);
+
+            if (proctection != DateTime.MinValue)
+                _teleportProtections.Remove(player);
+        }
+
+        private void OnPlayerAllowedToDamagePlayer(Player nativeInstigator, Player nativeVictim, ref bool isAllowed)
+        {
+            if (!_configuration.TeleportProtection)
+                return;
+            
+            var victim = UnturnedPlayer.FromPlayer(nativeVictim);
+            var instigator = UnturnedPlayer.FromPlayer(nativeInstigator);
+            
+            if (_teleportProtections.ContainsKey(victim))
+            {
+                var teleportProtection = GetTeleportProtection(victim);
+
+                var teleportProtectionTime = teleportProtection.AddSeconds(_configuration.TeleportProtectionTime);
+
+                if (teleportProtection > DateTime.Now)
+                {
+                    isAllowed = false;
+                    var waitTime = (teleportProtectionTime - DateTime.Now).TotalSeconds;
+
+                    UnturnedChat.Say(instigator, _plugin.Translate("TpaProtection", Math.Round(waitTime), victim.DisplayName), true);
+                }
+                else
+                {
+                    _teleportProtections.Remove(victim);
+                }
+            }
         }
 
         private void UpdateCooldown(UnturnedPlayer player)
@@ -180,6 +218,22 @@ namespace Feli.RocketMod.Teleporting
                 _cooldowns.Add(player, DateTime.Now);
         }
 
+        private void UpdateTeleportProtection(UnturnedPlayer player)
+        {
+            if (_teleportProtections.ContainsKey(player))
+                _teleportProtections[player] = DateTime.Now;
+            else 
+                _cooldowns.Add(player, DateTime.Now);
+        }
+
+        private DateTime GetTeleportProtection(UnturnedPlayer player)
+        {
+            if (_teleportProtections.ContainsKey(player))
+                return _teleportProtections[player];
+            
+            return DateTime.MinValue;
+        }
+        
         private DateTime GetCooldown(UnturnedPlayer player)
         {
             if (_cooldowns.ContainsKey(player))
@@ -190,6 +244,7 @@ namespace Feli.RocketMod.Teleporting
         
         public void Dispose()
         {
+            DamageTool.onPlayerAllowedToDamagePlayer -= OnPlayerAllowedToDamagePlayer;
             U.Events.OnPlayerDisconnected -= OnLeave;
         }
     }
