@@ -23,7 +23,7 @@ namespace Feli.RocketMod.Teleporting
                 ? new ExperienceEconomyProvider() as IEconomyProvider
                 : new UconomyEconomyProvider();
 
-            Logger.Log($"Teleporting plugin v{Assembly.GetName().Version} loaded !");
+            Logger.Log($"Teleporting plugin v1.3.0 loaded !");
             Logger.Log("Do you want more cool plugins? Join now: https://discord.gg/4FF2548 !");
             Logger.Log($"Economy Provider: {EconomyProvider.GetType().Name}");
         }
@@ -42,6 +42,7 @@ namespace Feli.RocketMod.Teleporting
             {"TpaCommand:WrongUsage:Send", "Correct command usage: /tpa send <playerName>"},
             {"TpaCommand:WrongUsage:NotFound", "Player with name {0} was not found"},
             {"TpaCommand:Send:Yourself", "There is no point on sending a tpa request to yourself"},
+            {"TpaCommand:Send:Combat", "Could not send the tpa request because you are in combat. You must wait {0} seconds"},
             {"TpaCommand:Send:Target", "{0} has just sent you a tpa request. Use \"/tpa accept\" to accept it or \n/tpa cancel\n to cancel it"},
             {"TpaCommand:Send:Sender", "Successfully sent a tpa request to {0}. Use \"/tpa cancel\" to cancel it"},
             {"TpaCommand:Send:Cooldown", "You cannot send a tpa request. Wait {0} seconds"},
@@ -56,6 +57,8 @@ namespace Feli.RocketMod.Teleporting
             {"TpaValidation:Car:Other", "The teleport was cancelled because {0} is on a car"},
             {"TpaValidation:Car:Self", "The teleport was cancelled because you are on a car"},
             {"TpaValidation:Leave", "The teleport was cancelled because {0} left the server"},
+            {"TpaValidation:Combat:Sender", "The teleport was cancelled because you are in combat. The combat mode expires in {0} seconds"},
+            {"TpaValidation:Combat:Target", "The teleport was cancelled because {0} is in combat"},
             {"TpaValidation:Balance:Sender", "You dont have enough balance to teleport. Teleport cost: {0}"},
             {"TpaValidation:Balance:Target", "The teleport was cancelled because {0} does not have enough balance"}
         };

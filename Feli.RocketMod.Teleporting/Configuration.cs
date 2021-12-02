@@ -11,6 +11,8 @@ namespace Feli.RocketMod.Teleporting
         public bool CancelWhenMove { get; set; }
         public bool TeleportProtection { get; set; }
         public double TeleportProtectionTime { get; set; }
+        public bool TeleportCombatAllowed { get; set; }
+        public double TeleportCombatTime { get; set; }
         public TeleportCost TeleportCost { get; set; }
         
         public void LoadDefaults()
@@ -21,6 +23,8 @@ namespace Feli.RocketMod.Teleporting
             CancelWhenMove = false;
             TeleportProtection = true;
             TeleportProtectionTime = 5;
+            TeleportCombatAllowed = false;
+            TeleportCombatTime = 30;
             TeleportCost = new TeleportCost()
             {
                 Enabled = false,

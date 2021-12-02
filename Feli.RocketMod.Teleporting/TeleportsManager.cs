@@ -13,17 +13,19 @@ namespace Feli.RocketMod.Teleporting
 {
     public class TeleportsManager : IDisposable
     {
-        private readonly Plugin _plugin;
-        private readonly Color _messageColor;
-        private readonly Configuration _configuration;
-        private readonly List<Tuple<UnturnedPlayer, UnturnedPlayer>> _teleportRequests;
-        private readonly Dictionary<UnturnedPlayer, DateTime> _cooldowns;
-        private readonly Dictionary<UnturnedPlayer, DateTime> _teleportProtections;
-            
+        private Plugin _plugin;
+        private Color _messageColor;
+        private Configuration _configuration;
+        private List<Tuple<UnturnedPlayer, UnturnedPlayer>> _teleportRequests;
+        private Dictionary<UnturnedPlayer, DateTime> _cooldowns;
+        private Dictionary<UnturnedPlayer, DateTime> _teleportProtections;
+        private Dictionary<UnturnedPlayer, DateTime> _playersLastCombat;
+
         public TeleportsManager(Plugin plugin)
         {
             _teleportRequests = new List<Tuple<UnturnedPlayer, UnturnedPlayer>>();
             _teleportProtections = new Dictionary<UnturnedPlayer, DateTime>();
+            _playersLastCombat = new Dictionary<UnturnedPlayer, DateTime>();
             _cooldowns = new Dictionary<UnturnedPlayer, DateTime>();
             _plugin = plugin;
             _configuration = plugin.Configuration.Instance;
@@ -56,6 +58,20 @@ namespace Feli.RocketMod.Teleporting
                 var waitTime = (cooldownTime - DateTime.Now).TotalSeconds;
                 UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Send:Cooldown", Math.Round(waitTime)), _messageColor, true);
                 return;
+            }
+            
+            if (!_configuration.TeleportCombatAllowed)
+            {
+                var combat = GetLastCombat(sender);
+
+                var combatTime = combat.AddSeconds(_configuration.TeleportCombatTime);
+
+                if (combatTime > DateTime.Now)
+                {
+                    var waitTime = (combatTime - DateTime.Now).TotalSeconds;
+                    UnturnedChat.Say(sender, _plugin.Translate("TpaCommand:Send:Combat", Math.Round(waitTime)), true);
+                    return;
+                }
             }
             
             UpdateCooldown(sender);
@@ -156,6 +172,23 @@ namespace Feli.RocketMod.Teleporting
                 return false;
             }
 
+            if (!_configuration.TeleportCombatAllowed)
+            {
+                var combat = GetLastCombat(sender);
+
+                var combatTime = combat.AddSeconds(_configuration.TeleportCombatTime);
+
+                if (combatTime > DateTime.Now)
+                {
+                    var waitTime = (combatTime - DateTime.Now).TotalSeconds;
+
+                    UnturnedChat.Say(sender, _plugin.Translate("TpaValidation:Combat:Sender", Math.Round(waitTime)), true);
+                    UnturnedChat.Say(target, _plugin.Translate("TpaValidation:Combat:Target", sender.DisplayName), true);
+
+                    return false;
+                }
+            }
+            
             return true;
         }
 
@@ -176,19 +209,27 @@ namespace Feli.RocketMod.Teleporting
             if (cooldown != DateTime.MinValue)
                 _cooldowns.Remove(player);
 
-            var proctection = GetTeleportProtection(player);
+            var protection = GetTeleportProtection(player);
 
-            if (proctection != DateTime.MinValue)
+            if (protection != DateTime.MinValue)
                 _teleportProtections.Remove(player);
+
+            var lastCombat = GetLastCombat(player);
+
+            if (lastCombat != DateTime.MinValue)
+                _playersLastCombat.Remove(player);
         }
 
         private void OnPlayerAllowedToDamagePlayer(Player nativeInstigator, Player nativeVictim, ref bool isAllowed)
         {
+            var instigator = UnturnedPlayer.FromPlayer(nativeInstigator);
+
+            UpdateLastCombat(instigator);
+            
             if (!_configuration.TeleportProtection)
                 return;
             
             var victim = UnturnedPlayer.FromPlayer(nativeVictim);
-            var instigator = UnturnedPlayer.FromPlayer(nativeInstigator);
             
             if (_teleportProtections.ContainsKey(victim))
             {
@@ -218,6 +259,22 @@ namespace Feli.RocketMod.Teleporting
                 _cooldowns.Add(player, DateTime.Now);
         }
 
+        private void UpdateLastCombat(UnturnedPlayer player)
+        {
+            if(_playersLastCombat.ContainsKey(player))
+                _playersLastCombat[player] = DateTime.Now;
+            else
+                _playersLastCombat.Add(player, DateTime.Now);
+        }
+
+        private DateTime GetLastCombat(UnturnedPlayer player)
+        {
+            if (_playersLastCombat.ContainsKey(player))
+                return _playersLastCombat[player];
+            
+            return DateTime.MinValue;
+        }
+        
         private void UpdateTeleportProtection(UnturnedPlayer player)
         {
             if (_teleportProtections.ContainsKey(player))
@@ -244,6 +301,12 @@ namespace Feli.RocketMod.Teleporting
         
         public void Dispose()
         {
+            _teleportRequests = null;
+            _teleportProtections = null;
+            _cooldowns = null;
+            _playersLastCombat = null;
+            _plugin = null;
+            _configuration = null;
             DamageTool.onPlayerAllowedToDamagePlayer -= OnPlayerAllowedToDamagePlayer;
             U.Events.OnPlayerDisconnected -= OnLeave;
         }
