@@ -48,6 +48,8 @@ namespace Feli.RocketMod.Teleporting.Commands
                 teleportsManager.Accept(player);
             else if (type == "c" | type == "cancel")
                 teleportsManager.Cancel(player);
+            else if(type == "l" | type == "list")
+                teleportsManager.List(player);
             else
             {
                 Say(caller, plugin.Translate("TpaCommand:WrongUsage"), messageColor, messageIcon);
@@ -64,7 +66,7 @@ namespace Feli.RocketMod.Teleporting.Commands
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
         public string Name => "tpa";
         public string Help => "Send, accept, deny and cancel teleport requests";
-        public string Syntax => "<accept|send|cancel>";
+        public string Syntax => "<accept|send|cancel|list>";
         public List<string> Aliases => new List<string>();
         public List<string> Permissions => new List<string>();
     }

@@ -38,7 +38,7 @@ namespace Feli.RocketMod.Teleporting
 
         public override TranslationList DefaultTranslations => new TranslationList()
         {
-            {"TpaCommand:WrongUsage", "Correct command usage: /tpa <accept|send|cancel>"},
+            {"TpaCommand:WrongUsage", "Correct command usage: /tpa <accept|send|cancel|list>"},
             {"TpaCommand:WrongUsage:Send", "Correct command usage: /tpa send <playerName>"},
             {"TpaCommand:WrongUsage:NotFound", "Player with name {0} was not found"},
             {"TpaCommand:Send:Yourself", "There is no point on sending a tpa request to yourself"},
@@ -50,6 +50,9 @@ namespace Feli.RocketMod.Teleporting
             {"TpaCommand:Accept:Delay", "You will be teleported to {0} in {1} seconds"},
             {"TpaCommand:Accept:Success", "Successfully accepted {0}'s tpa"},
             {"TpaCommand:Accept:Teleported", "Successfully teleported to {0}"},
+            {"TpaCommand:List:NotFound", "There are no tpa requests to list"},
+            {"TpaCommand:List:Display", "You have {0} tpa requests"},
+            {"TpaCommand:List:Section", "- {0}"},
             {"TpaCommand:Cancel:NotRequests", "There are no tpa requests to cancel"},
             {"TpaCommand:Cancel:Other", "{0} has just cancelled the tpa request"},
             {"TpaCommand:Cancel:Success", "Successfully canceled the tpa with {0}"},

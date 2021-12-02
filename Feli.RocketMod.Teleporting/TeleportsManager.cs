@@ -33,6 +33,7 @@ namespace Feli.RocketMod.Teleporting
             _messageColor = plugin.MessageColor;
             U.Events.OnPlayerDisconnected += OnLeave;
             DamageTool.onPlayerAllowedToDamagePlayer += OnPlayerAllowedToDamagePlayer;
+            PlayerAnimator.OnLeanChanged_Global += OnLeanChanged;
         }
 
         public void Send(UnturnedPlayer sender, UnturnedPlayer target)
@@ -132,6 +133,26 @@ namespace Feli.RocketMod.Teleporting
             }, _configuration.TeleportDelay);
         }
 
+        public void List(UnturnedPlayer player)
+        {
+            var requests = _teleportRequests.Where(x => x.Item2.Equals(player));
+
+            if (requests.Count() == 0)
+            {
+                Say(player, _plugin.Translate("TpaCommand:List:NotFound"), _messageColor, _messageIcon);
+                return;
+            }
+
+            var playerNames = _teleportRequests.Select(x => x.Item2.DisplayName);
+            
+            Say(player, _plugin.Translate("TpaCommand:List:Display", requests.Count()), _messageColor, _messageIcon);
+            
+            foreach (var playerName in playerNames)
+            {
+                Say(player, _plugin.Translate("TpaCommand:List:Section", playerName), _messageColor, _messageIcon);
+            }
+        }
+        
         public void Cancel(UnturnedPlayer player)
         {
             var request = _teleportRequests.FirstOrDefault(x => x.Item1.Equals(player) || x.Item2.Equals(player));
@@ -252,6 +273,29 @@ namespace Feli.RocketMod.Teleporting
                 }
             }
         }
+        
+        private void OnLeanChanged(PlayerAnimator obj)
+        {
+            if (!_configuration.AllowAcceptingWithKeys)
+                return;
+
+            var player = UnturnedPlayer.FromPlayer(obj.player);
+
+            if (obj.lean == 1)
+            {
+                var request = _teleportRequests.Any(x => x.Item2.Equals(player) || x.Item1.Equals(player));
+                
+                if(request)
+                    Cancel(player);
+            }
+            else if (obj.lean == -1)
+            {
+                var request = _teleportRequests.Any(x => x.Item2.Equals(player));
+                
+                if(request)
+                    Accept(player);
+            }
+        }
 
         private void UpdateCooldown(UnturnedPlayer player)
         {
@@ -282,7 +326,7 @@ namespace Feli.RocketMod.Teleporting
             if (_teleportProtections.ContainsKey(player))
                 _teleportProtections[player] = DateTime.Now;
             else 
-                _cooldowns.Add(player, DateTime.Now);
+                _teleportProtections.Add(player, DateTime.Now);
         }
 
         private DateTime GetTeleportProtection(UnturnedPlayer player)
@@ -316,6 +360,7 @@ namespace Feli.RocketMod.Teleporting
             _playersLastCombat = null;
             _plugin = null;
             _configuration = null;
+            PlayerAnimator.OnLeanChanged_Global -= OnLeanChanged;
             DamageTool.onPlayerAllowedToDamagePlayer -= OnPlayerAllowedToDamagePlayer;
             U.Events.OnPlayerDisconnected -= OnLeave;
         }
