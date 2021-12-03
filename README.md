@@ -10,6 +10,7 @@ Makes teleportation possible on your server
 - tpa accept
 - tpa send [playerName]
 - tpa cancel
+- tpa list
 
 ### Configuration
 ```xml
