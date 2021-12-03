@@ -113,6 +113,8 @@ namespace Feli.RocketMod.Teleporting
                 
                 if (_configuration.CancelWhenMove && senderPosition != sender.Position)
                 {
+                    Say(sender, _plugin.Translate("TpaValidation:Move:Sender"), _messageColor, _messageIcon);
+                    Say(target, _plugin.Translate("TpaValidation:Move:Target", sender.DisplayName), _messageColor, _messageIcon);
                     return;
                 }
 
