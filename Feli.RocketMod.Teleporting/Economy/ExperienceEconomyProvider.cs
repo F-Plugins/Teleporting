@@ -29,7 +29,12 @@ namespace Feli.RocketMod.Teleporting.Economy
 
         private Player GetPlayerFromId(string playerId)
         {
-            return PlayerTool.getPlayer(new CSteamID(ulong.Parse(playerId)));
+            var player = PlayerTool.getPlayer(new CSteamID(ulong.Parse(playerId)));
+
+            if (player == null)
+                throw new Exception($"No player was found with id: {playerId}");
+            
+            return player;
         }
     }
 }
