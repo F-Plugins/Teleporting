@@ -17,13 +17,16 @@ Makes teleportation possible on your server
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <MessageColor>magenta</MessageColor>
+  <MessageIcon />
   <TeleportDelay>5</TeleportDelay>
   <TeleportCooldown>60</TeleportCooldown>
   <CancelWhenMove>false</CancelWhenMove>
-  <TeleportProtection>false</TeleportProtection>
-  <TeleportProtectionTime>0</TeleportProtectionTime>
+  <TeleportProtection>true</TeleportProtection>
+  <TeleportProtectionTime>5</TeleportProtectionTime>
   <TeleportCombatAllowed>false</TeleportCombatAllowed>
-  <TeleportCombatTime>0</TeleportCombatTime>
+  <TeleportCombatTime>30</TeleportCombatTime>
+  <AllowAcceptingWithKeys>true</AllowAcceptingWithKeys>
+  <AutoAcceptSameGroupRequests>false</AutoAcceptSameGroupRequests>
   <TeleportCost>
     <Enabled>false</Enabled>
     <UseXp>true</UseXp>
