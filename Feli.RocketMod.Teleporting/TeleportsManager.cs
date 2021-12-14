@@ -6,7 +6,9 @@ using Rocket.Core.Utils;
 using Rocket.Unturned;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
+using Steamworks;
 using UnityEngine;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace Feli.RocketMod.Teleporting
 {
@@ -81,19 +83,30 @@ namespace Feli.RocketMod.Teleporting
             request = new Tuple<UnturnedPlayer, UnturnedPlayer>(sender, target);
             
             _teleportRequests.Add(request);
+
+            if (_configuration.AutoAcceptSameGroupRequests && sender.Player.quests.groupID != CSteamID.Nil &&
+                target.Player.quests.groupID != CSteamID.Nil &&
+                sender.Player.quests.groupID == target.Player.quests.groupID)
+            {
+                Accept(target, request);
+                return;
+            }
             
             Say(sender, _plugin.Translate("TpaCommand:Send:Sender", target.DisplayName), _messageColor, _messageIcon);
             Say(target, _plugin.Translate("TpaCommand:Send:Target", sender.DisplayName), _messageColor, _messageIcon);
         }
         
-        public void Accept(UnturnedPlayer target)
+        public void Accept(UnturnedPlayer target, Tuple<UnturnedPlayer, UnturnedPlayer> request = null)
         {
-            var request = _teleportRequests.FirstOrDefault(x => x.Item2.Equals(target));
-
             if (request == null)
             {
-                Say(target , _plugin.Translate("TpaCommand:Accept:NoRequests"), _messageColor, _messageIcon);
-                return;
+                request = _teleportRequests.FirstOrDefault(x => x.Item2.Equals(target));
+
+                if (request == null)
+                {
+                    Say(target , _plugin.Translate("TpaCommand:Accept:NoRequests"), _messageColor, _messageIcon);
+                    return;
+                }
             }
 
             var sender = request.Item1;

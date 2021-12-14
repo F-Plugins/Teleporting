@@ -16,6 +16,7 @@ namespace Feli.RocketMod.Teleporting
         public bool TeleportCombatAllowed { get; set; }
         public double TeleportCombatTime { get; set; }
         public bool AllowAcceptingWithKeys { get; set; }
+        public bool AutoAcceptSameGroupRequests { get; set; }
         public TeleportCost TeleportCost { get; set; }
         
         public void LoadDefaults()
@@ -30,6 +31,7 @@ namespace Feli.RocketMod.Teleporting
             TeleportCombatAllowed = false;
             TeleportCombatTime = 30;
             AllowAcceptingWithKeys = true;
+            AutoAcceptSameGroupRequests = true;
             TeleportCost = new TeleportCost()
             {
                 Enabled = false,
