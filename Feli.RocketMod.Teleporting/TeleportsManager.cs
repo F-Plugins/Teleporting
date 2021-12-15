@@ -157,7 +157,7 @@ namespace Feli.RocketMod.Teleporting
                 return;
             }
 
-            var playerNames = requests.Select(x => x.Item2.DisplayName);
+            var playerNames = requests.Select(x => x.Item1.DisplayName);
             
             Say(player, _plugin.Translate("TpaCommand:List:Display", requests.Count()), _messageColor, _messageIcon);
             

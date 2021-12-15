@@ -182,7 +182,7 @@ namespace Feli.OpenMod.Teleporting.Services
                 return;
             }
 
-            var playerNames = requests.Select(x => x.Item2.DisplayName);
+            var playerNames = requests.Select(x => x.Item1.DisplayName);
 
             await Say(player, _stringLocalizer["tpaCommand:list:display", requests.Count()]);
 
