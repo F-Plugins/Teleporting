@@ -8,7 +8,6 @@ using Rocket.Unturned.Player;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
-using Logger = Rocket.Core.Logging.Logger;
 
 namespace Feli.RocketMod.Teleporting
 {
@@ -158,7 +157,7 @@ namespace Feli.RocketMod.Teleporting
                 return;
             }
 
-            var playerNames = _teleportRequests.Select(x => x.Item2.DisplayName);
+            var playerNames = requests.Select(x => x.Item2.DisplayName);
             
             Say(player, _plugin.Translate("TpaCommand:List:Display", requests.Count()), _messageColor, _messageIcon);
             
@@ -174,7 +173,7 @@ namespace Feli.RocketMod.Teleporting
 
             if (request == null)
             {
-                Say(player, _plugin.Translate("TpaCommand:Cancel:NotRequests"), _messageColor, _messageIcon);
+                Say(player, _plugin.Translate("TpaCommand:Cancel:NoRequests"), _messageColor, _messageIcon);
                 return;
             }
 
@@ -194,9 +193,10 @@ namespace Feli.RocketMod.Teleporting
             if (sender.CurrentVehicle != null || target.CurrentVehicle != null)
             {
                 var problem = sender.CurrentVehicle != null ? sender : target;
-
+                var noProblem = sender.CurrentVehicle == null ? sender : target;
+                
                 Say(problem, _plugin.Translate("TpaValidation:Car:Self"), _messageColor, _messageIcon);
-                Say(sender, _plugin.Translate("TpaValidation:Car:Other", problem.DisplayName),
+                Say(noProblem, _plugin.Translate("TpaValidation:Car:Other", problem.DisplayName),
                     _messageColor, _messageIcon);
 
                 return false;

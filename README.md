@@ -4,7 +4,8 @@
 Makes teleportation possible on your server
 
 ### Download Now
-[ClickMe](https://github.com/F-Plugins/Teleporting/releases)
+RocketMod: [ClickMe](https://github.com/F-Plugins/Teleporting/releases)
+OpenMod: `openmod install Feli.Teleporting`
 
 ### Commands
 - tpa accept

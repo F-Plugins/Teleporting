@@ -53,7 +53,7 @@ namespace Feli.RocketMod.Teleporting
             {"TpaCommand:List:NotFound", "There are no tpa requests to list"},
             {"TpaCommand:List:Display", "You have {0} tpa requests"},
             {"TpaCommand:List:Section", "- {0}"},
-            {"TpaCommand:Cancel:NotRequests", "There are no tpa requests to cancel"},
+            {"TpaCommand:Cancel:NoRequests", "There are no tpa requests to cancel"},
             {"TpaCommand:Cancel:Other", "{0} has just cancelled the tpa request"},
             {"TpaCommand:Cancel:Success", "Successfully canceled the tpa with {0}"},
             {"TpaProtection", "You must wait {0} seconds to damage {1} he is on tpa protection"},

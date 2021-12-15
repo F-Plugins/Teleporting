@@ -1,0 +1,49 @@
+﻿tpaCommand:
+  wrongUsage: 
+    usage: "Correct command usage: /tpa <playerName|accept|send|cancel|list>"
+    send: "Correct command usage: /tpa send <playerName>"
+    notFound: "Player with name {0} was not found"
+    
+  send:
+    yourself: "There is no point on sending a tpa request to yourself"
+    combat: "Could not send the tpa request because you are in combat. You must wait {0} seconds"
+    target: "{0} has just sent you a tpa request. Use \"/tpa accept\" to accept it or \"/tpa cancel\" to cancel it"
+    sender: "Successfully sent a tpa request to {0}. Use \"/tpa cancel\" to cancel it"
+    cooldown: "You cannot send a tpa request. Wait {0} seconds"
+    
+  accept:
+    noRequests: "There are no tpa requests to accept"
+    delay: "You will be teleported to {0} in {1} seconds"
+    success: "Successfully accepted {0}'s tpa"
+    teleported: "Successfully teleported to {0}"
+    
+  list:
+    notFound: "There are no tpa requests to list"
+    display: "You have {0} tpa requests"
+    section: "- {0}"
+    
+  cancel:
+    noRequests: "There are no tpa requests to cancel"
+    other: "{0} has just cancelled the tpa request"
+    success: "Successfully canceled the tpa with {0}"
+
+tpaProtection: "You must wait {0} seconds to damage {1} he is on tpa protection"
+
+tpaValidation:
+  car:
+    other: "The teleport was cancelled because {0} is on a car"
+    self: "The teleport was cancelled because you are on a car"
+    
+  leave: "The teleport was cancelled because {0} left the server"
+  
+  move:
+    sender: "The teleport was cancelled because your moved"
+    target: "The teleport was cancelled because {0} moved"
+    
+  combat: 
+    sender: "The teleport was cancelled because you are in combat. The combat mode expires in {0} seconds"
+    target: "The teleport was cancelled because {0} is in combat"
+    
+  balance: 
+    sender: "You dont have enough balance to teleport. Teleport cost: {0}"
+    target: "The teleport was cancelled because {0} does not have enough balance"

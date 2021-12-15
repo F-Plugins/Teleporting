@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Feli.RocketMod.Teleporting", "Feli.RocketMod.Teleporting\Feli.RocketMod.Teleporting.csproj", "{795C0322-F7CE-4896-B0E7-09B37D0F8440}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Feli.OpenMod.Teleporting", "Feli.OpenMod.Teleporting\Feli.OpenMod.Teleporting.csproj", "{D9C12322-6AB5-4CE2-8A14-BB12A7E46C18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{795C0322-F7CE-4896-B0E7-09B37D0F8440}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{795C0322-F7CE-4896-B0E7-09B37D0F8440}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{795C0322-F7CE-4896-B0E7-09B37D0F8440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9C12322-6AB5-4CE2-8A14-BB12A7E46C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9C12322-6AB5-4CE2-8A14-BB12A7E46C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9C12322-6AB5-4CE2-8A14-BB12A7E46C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9C12322-6AB5-4CE2-8A14-BB12A7E46C18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

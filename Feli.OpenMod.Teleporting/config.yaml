@@ -1,0 +1,19 @@
+﻿teleportOptions:
+  delay: 5
+  cooldown: 60
+  cancelWhenMove: false
+  teleportProtection:
+    enabled: true
+    time: 5
+  combat:
+    allow: false
+    time: 30
+  allowAcceptingWithKeys: false
+  autoAcceptSameGroupRequests: false
+
+teleportCost:
+  enabled: false
+  cost: 10
+  
+messages:
+  icon: ""

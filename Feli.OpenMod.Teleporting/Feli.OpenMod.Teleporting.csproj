@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net461</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageId>Feli.Teleporting</PackageId> <!-- must be unique, should be same as your plugin ID -->
+        <PackageDescription>Makes teleportation possible on your server</PackageDescription>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> <!-- see https://spdx.org/licenses/ -->
+        <PackageAuthor>FPlugins</PackageAuthor>
+        <PackageTags>openmod openmod-plugin unturned</PackageTags> <!-- XXX can be unturned, unityengine or universal depending on your plugin -->
+        <Version>0.0.0</Version> <!-- Your plugins version. Must be semversion, see https://semver.org/ -->
+        <PackageVersion>0.0.0</PackageVersion>
+        <InformationalVersion>0.0.0</InformationalVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateNugetPackage>true</GenerateNugetPackage>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="OpenMod.Unturned" Version="3.2.7" />
+      <PackageReference Include="SilK.Unturned.Extras" Version="1.7.2" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <EmbeddedResource Include="config.yaml" />
+        <EmbeddedResource Include="translations.yaml" />
+        <EmbeddedResource Include="packages.yaml" />
+    </ItemGroup>
+</Project>
