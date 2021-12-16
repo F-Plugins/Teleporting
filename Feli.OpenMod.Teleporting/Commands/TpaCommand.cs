@@ -64,7 +64,7 @@ namespace Feli.OpenMod.Teleporting.Commands
 
                 if (target == null)
                 {
-                    await Say(user, _stringLocalizer["tpaCommand:wrongUsage:notFound"]);
+                    await Say(user, _stringLocalizer["tpaCommand:wrongUsage:notFound", Context.Parameters.ToArray()[1]]);
                     return;
                 }
                 
@@ -83,7 +83,7 @@ namespace Feli.OpenMod.Teleporting.Commands
 
                 if (target == null)
                 {
-                    await Say(user, _stringLocalizer["tpaCommand:wrongUsage:notFound"]);
+                    await Say(user, _stringLocalizer["tpaCommand:wrongUsage:notFound", Context.Parameters.ToArray()[0]]);
                     return;
                 }
                 
