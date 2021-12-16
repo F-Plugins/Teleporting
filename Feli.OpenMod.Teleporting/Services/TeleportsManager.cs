@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -16,8 +15,10 @@ using OpenMod.Unturned.Players.Animator.Events;
 using OpenMod.Unturned.Players.Life.Events;
 using OpenMod.Unturned.Users;
 using OpenMod.Unturned.Users.Events;
+using SDG.Unturned;
 using SilK.Unturned.Extras.Events;
 using Steamworks;
+using UnityEngine;
 
 namespace Feli.OpenMod.Teleporting.Services
 {
@@ -399,7 +400,11 @@ namespace Feli.OpenMod.Teleporting.Services
         
         private async Task Say(UnturnedUser user, string message)
         {
-            await user.PrintMessageAsync(message, Color.Green, true, _configuration["messages:icon"]);
+            await UniTask.SwitchToMainThread();
+            ChatManager.serverSendMessage(message, Color.green, toPlayer: user.Player.SteamPlayer, mode: EChatMode.SAY,
+                useRichTextFormatting: true, iconURL: _configuration["messages:icon"]);
+            await UniTask.SwitchToThreadPool();
+            //await user.PrintMessageAsync(message, Color.Green, true, _configuration["messages:icon"]);
         }
 
         public void Dispose()

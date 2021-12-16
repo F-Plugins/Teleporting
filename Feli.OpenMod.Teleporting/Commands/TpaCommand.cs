@@ -9,6 +9,8 @@ using OpenMod.API.Users;
 using OpenMod.Core.Commands;
 using OpenMod.Unturned.Commands;
 using OpenMod.Unturned.Users;
+using SDG.Unturned;
+using Color = UnityEngine.Color;
 
 namespace Feli.OpenMod.Teleporting.Commands
 {
@@ -89,9 +91,13 @@ namespace Feli.OpenMod.Teleporting.Commands
             }
         }
         
-        private async Task Say(UnturnedUser user, string message)
+        private async UniTask Say(UnturnedUser user, string message)
         {
-            await user.PrintMessageAsync(message, Color.Green, true, _configuration["messages:icon"]);
+            await UniTask.SwitchToMainThread();
+            ChatManager.serverSendMessage(message, Color.green, toPlayer: user.Player.SteamPlayer, mode: EChatMode.SAY,
+                useRichTextFormatting: true, iconURL: _configuration["messages:icon"]);
+            await UniTask.SwitchToThreadPool();
+            //await user.PrintMessageAsync(message, Color.Green, true, _configuration["messages:icon"]);
         }
     }
 }
