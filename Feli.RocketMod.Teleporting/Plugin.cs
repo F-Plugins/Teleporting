@@ -23,7 +23,7 @@ namespace Feli.RocketMod.Teleporting
                 ? new ExperienceEconomyProvider() as IEconomyProvider
                 : new UconomyEconomyProvider();
 
-            Logger.Log($"Teleporting plugin v1.6.1 loaded !");
+            Logger.Log($"Teleporting plugin v1.6.2 loaded !");
             Logger.Log("Do you want more cool plugins? Join now: https://discord.gg/4FF2548 !");
             Logger.Log($"Economy Provider: {EconomyProvider.GetType().Name}");
         }
@@ -65,7 +65,9 @@ namespace Feli.RocketMod.Teleporting
             {"TpaValidation:Combat:Sender", "The teleport was cancelled because you are in combat. The combat mode expires in {0} seconds"},
             {"TpaValidation:Combat:Target", "The teleport was cancelled because {0} is in combat"},
             {"TpaValidation:Balance:Sender", "You dont have enough balance to teleport. Teleport cost: {0}"},
-            {"TpaValidation:Balance:Target", "The teleport was cancelled because {0} does not have enough balance"}
+            {"TpaValidation:Balance:Target", "The teleport was cancelled because {0} does not have enough balance"},
+            {"TpaValidation:Dead:Alive", "The teleport was cancelled because {0} is dead" },
+            {"TpaValidation:Dead:Dead", "The teleport was cancelled because you died" }
         };
     }
 }

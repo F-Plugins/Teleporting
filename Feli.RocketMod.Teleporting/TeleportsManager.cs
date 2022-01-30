@@ -202,6 +202,17 @@ namespace Feli.RocketMod.Teleporting
                 return false;
             }
             
+            if(sender.Dead || target.Dead)
+            {
+                var dead = sender.Dead ? sender : target;
+                var alive = !sender.Dead ? sender : target;
+
+                Say(dead, _plugin.Translate("TpaValidation:Dead:Dead"), _messageColor, _messageIcon);
+                Say(alive, _plugin.Translate("TpaValidation:Dead:Alive", dead.DisplayName), _messageColor, _messageIcon);
+
+                return false;
+            }
+
             if (_configuration.TeleportCost.Enabled && _plugin.EconomyProvider.GetBalance(sender.Id) < _configuration.TeleportCost.TpaCost)
             {
                 Say(sender, _plugin.Translate("TpaValidation:Balance:Sender", _configuration.TeleportCost.TpaCost), _messageColor, _messageIcon);

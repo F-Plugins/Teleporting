@@ -228,6 +228,17 @@ namespace Feli.OpenMod.Teleporting.Services
                 return false;
             }
 
+            if (!sender.Player.IsAlive || !target.Player.IsAlive)
+            {
+                var dead = !sender.Player.IsAlive ? sender : target;
+                var alive = sender.Player.IsAlive ? sender : target;
+
+                await Say(dead, _stringLocalizer["tpaValidation:dead:dead"]);
+                await Say(alive, _stringLocalizer["tpaValidation:dead:alive", dead.DisplayName]);
+
+                return false;
+            }
+
             if (_configuration.GetSection("teleportCost:enabled").Get<bool>())
             {
                 var balance = await _economyProvider.GetBalanceAsync(sender.Id, KnownActorTypes.Player);

@@ -47,3 +47,7 @@ tpaValidation:
   balance: 
     sender: "You dont have enough balance to teleport. Teleport cost: {0}"
     target: "The teleport was cancelled because {0} does not have enough balance"
+
+  dead:
+    alive: "The teleport was cancelled because {0} is dead"
+    dead: "The teleport was cancelled because you died"
