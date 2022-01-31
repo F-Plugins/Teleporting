@@ -256,16 +256,29 @@ namespace Feli.OpenMod.Teleporting.Services
 
             if (!_configuration.GetSection("tpaOptions:combat:allow").Get<bool>())
             {
-                var combat = GetLastCombat(sender);
+                var senderCombat = GetLastCombat(sender);
+                var targetCombat = GetLastCombat(target);
 
-                var combatTime = combat.AddSeconds(_configuration.GetSection("tpaOptions:combat:time").Get<double>());
+                var time = _configuration.GetSection("teleportOptions:combat:time").Get<double>();
 
-                if (combatTime > DateTime.Now)
+                var senderCombatTime = senderCombat.AddSeconds(time);
+                var targetCombatTime = targetCombat.AddSeconds(time);
+
+                if (senderCombatTime > DateTime.Now)
                 {
-                    var waitTime = (combatTime - DateTime.Now).TotalSeconds;
+                    var waitTime = (senderCombatTime - DateTime.Now).TotalSeconds;
 
-                    await Say(sender, _stringLocalizer["tpaValidation:combat:sender", Math.Round(waitTime)]);
-                    await Say(target, _stringLocalizer["tpaValidation:combat:target", sender.DisplayName]);
+                    await Say(sender, _stringLocalizer["tpaValidation:combat:self", Math.Round(waitTime)]);
+                    await Say(target, _stringLocalizer["tpaValidation:combat:other", sender.DisplayName]);
+
+                    return false;
+                }
+                else if (targetCombatTime > DateTime.Now)
+                {
+                    var waitTime = (targetCombatTime - DateTime.Now).TotalSeconds;
+
+                    await Say(target, _stringLocalizer["tpaValidation:combat:self", Math.Round(waitTime)]);
+                    await Say(sender, _stringLocalizer["tpaValidation:combat:other", target.DisplayName]);
 
                     return false;
                 }

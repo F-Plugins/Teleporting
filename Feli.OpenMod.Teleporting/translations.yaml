@@ -41,8 +41,8 @@ tpaValidation:
     target: "The teleport was cancelled because {0} moved"
     
   combat: 
-    sender: "The teleport was cancelled because you are in combat. The combat mode expires in {0} seconds"
-    target: "The teleport was cancelled because {0} is in combat"
+    self: "The teleport was cancelled because you are in combat. The combat mode expires in {0} seconds"
+    other: "The teleport was cancelled because {0} is in combat"
     
   balance: 
     sender: "You dont have enough balance to teleport. Teleport cost: {0}"

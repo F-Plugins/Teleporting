@@ -223,21 +223,32 @@ namespace Feli.RocketMod.Teleporting
 
             if (!_configuration.TeleportCombatAllowed)
             {
-                var combat = GetLastCombat(sender);
+                var senderCombat = GetLastCombat(sender);
+                var targetCombat = GetLastCombat(target);
 
-                var combatTime = combat.AddSeconds(_configuration.TeleportCombatTime);
+                var senderCombatTime = senderCombat.AddSeconds(_configuration.TeleportCombatTime);
+                var targetCombatTime = targetCombat.AddSeconds(_configuration.TeleportCombatTime);
 
-                if (combatTime > DateTime.Now)
+                if(senderCombatTime > DateTime.Now)
                 {
-                    var waitTime = (combatTime - DateTime.Now).TotalSeconds;
+                    var waitTime = (senderCombatTime - DateTime.Now).TotalSeconds;
 
-                    Say(sender, _plugin.Translate("TpaValidation:Combat:Sender", Math.Round(waitTime)), _messageColor, _messageIcon);
-                    Say(target, _plugin.Translate("TpaValidation:Combat:Target", sender.DisplayName), _messageColor, _messageIcon);
+                    Say(sender, _plugin.Translate("TpaValidation:Combat:Self", Math.Round(waitTime)), _messageColor, _messageIcon);
+                    Say(target, _plugin.Translate("TpaValidation:Combat:Other", sender.DisplayName), _messageColor, _messageIcon);
+
+                    return false;
+                }
+                else if(targetCombatTime > DateTime.Now)
+                {
+                    var waitTime = (targetCombatTime - DateTime.Now).TotalSeconds;
+
+                    Say(target, _plugin.Translate("TpaValidation:Combat:Self", Math.Round(waitTime)), _messageColor, _messageIcon);
+                    Say(sender, _plugin.Translate("TpaValidation:Combat:Other", target.DisplayName), _messageColor, _messageIcon);
 
                     return false;
                 }
             }
-            
+
             return true;
         }
 
