@@ -23,7 +23,7 @@ namespace Feli.RocketMod.Teleporting
                 ? new ExperienceEconomyProvider() as IEconomyProvider
                 : new UconomyEconomyProvider();
 
-            Logger.Log($"Teleporting plugin v1.6.4 loaded !");
+            Logger.Log($"Teleporting plugin v1.6.5 loaded !");
             Logger.Log("Do you want more cool plugins? Join now: https://discord.gg/4FF2548 !");
             Logger.Log($"Economy Provider: {EconomyProvider.GetType().Name}");
         }
