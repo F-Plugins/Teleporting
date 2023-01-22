@@ -34,7 +34,7 @@ namespace Feli.OpenMod.Teleporting.Services
         private readonly IStringLocalizer _stringLocalizer;
         private readonly IUnturnedUserDirectory _unturnedUserDirectory;
         private readonly IServiceProvider _serviceProvider;
-        private IEconomyProvider _economyProvider => _serviceProvider.GetRequiredService<IEconomyProvider>();
+        private IEconomyProvider EconomyProvider => _serviceProvider.GetRequiredService<IEconomyProvider>();
 
         public TeleportsManager(
             IServiceProvider serviceProvider,
@@ -158,13 +158,13 @@ namespace Feli.OpenMod.Teleporting.Services
                     return;
 
                 if (_configuration.GetSection("teleportCost:enabled").Get<bool>())
-                    await _economyProvider.UpdateBalanceAsync(sender.Id, KnownActorTypes.Player,
+                    await EconomyProvider.UpdateBalanceAsync(sender.Id, KnownActorTypes.Player,
                         -_configuration.GetSection("teleportCost:cost").Get<decimal>(), "Teleport");
                 
                 UpdateTeleportProtection(sender);
                 
                 await UniTask.SwitchToMainThread();
-                sender.Player.Player.teleportToLocationUnsafe(target.Player.Player.transform.position,
+                sender.Player.Player.teleportToLocation(target.Player.Player.transform.position,
                     target.Player.Player.look.yaw);
                 await UniTask.SwitchToThreadPool();
 
@@ -241,7 +241,7 @@ namespace Feli.OpenMod.Teleporting.Services
 
             if (_configuration.GetSection("teleportCost:enabled").Get<bool>())
             {
-                var balance = await _economyProvider.GetBalanceAsync(sender.Id, KnownActorTypes.Player);
+                var balance = await EconomyProvider.GetBalanceAsync(sender.Id, KnownActorTypes.Player);
 
                 var cost = _configuration.GetSection("teleportCost:cost").Get<decimal>();
                 

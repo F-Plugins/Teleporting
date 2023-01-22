@@ -140,7 +140,7 @@ namespace Feli.RocketMod.Teleporting
                 
                 UpdateTeleportProtection(sender);
                 
-                sender.Player.teleportToLocationUnsafe(target.Position, target.Player.look.yaw);
+                sender.Teleport(target.Position, target.Player.look.yaw);
                 _teleportRequests.Remove(request);
                 
                 Say(sender, _plugin.Translate("TpaCommand:Accept:Teleported", target.DisplayName), _messageColor, _messageIcon);
